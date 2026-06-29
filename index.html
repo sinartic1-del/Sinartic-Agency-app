@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="theme-color" content="#0073DA"/>
+  <meta name="description" content="Sinartic Agency – Demande de devis"/>
+  <title>Sinartic Agency</title>
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --blue:    #0073DA;
+      --blue-dk: #005aab;
+      --blue-lt: #e8f3fd;
+      --red:     #E8201A;
+      --white:   #ffffff;
+      --grey-0:  #f4f6f9;
+      --grey-1:  #e4e9f0;
+      --grey-2:  #c0cad6;
+      --grey-4:  #4a5568;
+      --grey-6:  #1a202c;
+      --radius:  12px;
+      --shadow:  0 2px 16px rgba(0,0,0,.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--grey-0);
+      color: var(--grey-6);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    #app-header {
+      background: var(--blue);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,.18);
+    }
+
+    .header-top {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 18px;
+    }
+
+    /* Zone logo — cliquable depuis l'éditeur */
+    #logo-zone {
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,.15);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 2px dashed rgba(255,255,255,.35);
+      cursor: default;
+    }
+
+    #logo-zone img {
+      width: 100%; height: 100%; object-fit: contain;
+    }
+
+    #logo-placeholder {
+      font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,.6);
+      text-align: center; line-height: 1.2;
+      padding: 4px;
+    }
+
+    .header-text { flex: 1; min-width: 0; }
+
+    #header-agency-name {
+      font-size: 16px; font-weight: 800;
+      color: var(--white); letter-spacing: .2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    #header-tagline {
+      font-size: 11px; color: rgba(255,255,255,.75);
+      margin-top: 1px; font-weight: 400;
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      border-top: 1px solid rgba(255,255,255,.12);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      flex: 1; min-width: 80px;
+      padding: 10px 6px;
+      background: none; border: none;
+      color: rgba(255,255,255,.65);
+      font-size: 12px; font-weight: 600;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: color .18s, border-color .18s;
+      white-space: nowrap; font-family: inherit;
+    }
+
+    .tab-btn.active {
+      color: var(--white);
+      border-bottom-color: var(--red);
+    }
+
+    /* ── MAIN ── */
+    main { padding: 18px 15px 90px; max-width: 480px; margin: 0 auto; }
+
+    /* ── BRANCH PANELS ── */
+    .branch-panel { display: none; }
+    .branch-panel.active { display: block; }
+
+    /* ── HERO CARD ── */
+    .hero-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--blue);
+    }
+
+    .hero-card.red  { border-left-color: var(--red); }
+    .hero-card.dark { border-left-color: var(--grey-6); }
+
+    .branch-label {
+      font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--blue); margin-bottom: 8px;
+    }
+
+    .red  .branch-label { color: var(--red); }
+    .dark .branch-label { color: var(--grey-4); }
+
+    .hero-card h2 {
+      font-size: 18px; font-weight: 800;
+      line-height: 1.25; margin-bottom: 6px;
+    }
+
+    .hero-card p {
+      font-size: 13px; color: var(--grey-4); line-height: 1.55;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 18px 18px 20px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-label {
+      font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .8px;
+      color: var(--grey-2); margin-bottom: 14px;
+    }
+
+    /* ── FORM FIELDS ── */
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field-label {
+      display: block;
+      font-size: 12px; font-weight: 700;
+      color: var(--grey-4); margin-bottom: 5px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1.5px solid var(--grey-1);
+      border-radius: 8px;
+      font-size: 14px; font-family: inherit;
+      color: var(--grey-6); background: var(--white);
+      transition: border-color .18s, box-shadow .18s;
+      outline: none;
+      -webkit-appearance: none; appearance: none;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0,115,218,.1);
+    }
+
+    .field textarea { resize: vertical; min-height: 88px; }
+
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234a5568' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 34px;
+    }
+
+    /* ── SERVICE CHIPS ── */
+    .chips-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .chip {
+      border: 1.5px solid var(--grey-1);
+      border-radius: 9px;
+      padding: 11px 10px;
+      cursor: pointer;
+      transition: border-color .18s, background .18s;
+      user-select: none;
+    }
+
+    .chip input[type="checkbox"] { display: none; }
+
+    .chip-name {
+      font-size: 12px; font-weight: 700;
+      color: var(--grey-6); display: block;
+    }
+
+    .chip-sub {
+      font-size: 10px; color: var(--grey-4);
+      margin-top: 3px; display: block;
+    }
+
+    .chip.selected {
+      border-color: var(--blue);
+      background: var(--blue-lt);
+    }
+
+    .chip.selected .chip-name { color: var(--blue); }
+
+    /* ── DELAI BUTTONS ── */
+    .delai-row { display: flex; gap: 8px; }
+
+    .delai-btn {
+      flex: 1; padding: 10px 6px;
+      border: 1.5px solid var(--grey-1);
+      border-radius: 8px; background: none;
+      font-size: 11px; font-weight: 700;
+      cursor: pointer; text-align: center;
+      font-family: inherit; color: var(--grey-4);
+      transition: border-color .18s, background .18s, color .18s;
+      line-height: 1.4;
+    }
+
+    .delai-btn small { font-weight: 400; opacity: .75; display: block; font-size: 10px; }
+
+    .delai-btn.selected {
+      border-color: var(--red);
+      background: #fff2f2;
+      color: var(--red);
+    }
+
+    /* ── ESTIMATE ── */
+    .estimate-box {
+      background: var(--blue);
+      border-radius: var(--radius);
+      padding: 15px 18px;
+      color: var(--white);
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .estimate-box.visible { display: block; }
+
+    .estimate-label {
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .7px;
+      opacity: .75; margin-bottom: 4px;
+    }
+
+    .estimate-amount { font-size: 24px; font-weight: 900; }
+    .estimate-note   { font-size: 10px; opacity: .65; margin-top: 3px; }
+
+    /* ── SEND BUTTONS ── */
+    .btn-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 11px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 13px 14px;
+      border-radius: 9px; border: none; cursor: pointer;
+      font-size: 13px; font-weight: 700; font-family: inherit;
+      transition: filter .15s, transform .12s;
+    }
+
+    .btn:active { transform: scale(.97); }
+
+    .btn-wa    { background: #25D366; color: var(--white); }
+    .btn-email { background: var(--red);  color: var(--white); }
+
+    .btn-wa:hover    { filter: brightness(1.07); }
+    .btn-email:hover { filter: brightness(1.07); }
+
+    /* ── INFO ITEMS ── */
+    .info-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--grey-1);
+      font-size: 13px; line-height: 1.5;
+    }
+
+    .info-item:last-child { border-bottom: none; }
+
+    .info-item strong {
+      display: block; font-weight: 700;
+      color: var(--grey-6); margin-bottom: 2px; font-size: 13px;
+    }
+
+    .info-item span { color: var(--grey-4); font-size: 13px; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 22px; left: 50%;
+      transform: translateX(-50%) translateY(70px);
+      background: var(--grey-6); color: var(--white);
+      padding: 11px 22px; border-radius: 30px;
+      font-size: 13px; font-weight: 600;
+      box-shadow: 0 6px 22px rgba(0,0,0,.2);
+      transition: transform .32s cubic-bezier(.34,1.56,.64,1);
+      z-index: 9999; white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ═══════════════════════════════════
+       EDITEUR VISUEL
+    ═══════════════════════════════════ */
+    #editor-toggle {
+      position: fixed; bottom: 22px; right: 16px; z-index: 500;
+      background: var(--blue); color: var(--white);
+      border: none; border-radius: 50px;
+      padding: 11px 18px;
+      font-size: 12px; font-weight: 700; font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,115,218,.4);
+      transition: background .18s;
+    }
+
+    #editor-toggle:hover { background: var(--blue-dk); }
+
+    #editor-panel {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--white);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 32px rgba(0,0,0,.15);
+      z-index: 600;
+      transform: translateY(100%);
+      transition: transform .32s cubic-bezier(.4,0,.2,1);
+      max-height: 90vh; overflow-y: auto;
+    }
+
+    #editor-panel.open { transform: translateY(0); }
+
+    .editor-handle {
+      width: 38px; height: 4px;
+      background: var(--grey-1);
+      border-radius: 4px;
+      margin: 12px auto 0;
+    }
+
+    .editor-header {
+      padding: 14px 20px 12px;
+      border-bottom: 1px solid var(--grey-1);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .editor-header h3 {
+      font-size: 15px; font-weight: 800; color: var(--grey-6);
+    }
+
+    .editor-close {
+      background: var(--grey-1); border: none; border-radius: 50%;
+      width: 28px; height: 28px; font-size: 14px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-family: inherit; color: var(--grey-4);
+    }
+
+    .editor-body { padding: 16px 20px 32px; }
+
+    .editor-section {
+      margin-bottom: 22px;
+    }
+
+    .editor-section-title {
+      font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .8px;
+      color: var(--grey-2); margin-bottom: 12px;
+    }
+
+    .editor-field { margin-bottom: 12px; }
+
+    .editor-field label {
+      display: block; font-size: 12px; font-weight: 600;
+      color: var(--grey-4); margin-bottom: 5px;
+    }
+
+    .editor-field input[type="text"],
+    .editor-field input[type="tel"],
+    .editor-field input[type="email"] {
+      width: 100%; padding: 10px 12px;
+      border: 1.5px solid var(--grey-1);
+      border-radius: 8px; font-size: 13px;
+      font-family: inherit; color: var(--grey-6);
+      outline: none;
+      transition: border-color .18s;
+    }
+
+    .editor-field input:focus { border-color: var(--blue); }
+
+    /* Logo upload dans l'éditeur */
+    .logo-upload-area {
+      border: 2px dashed var(--grey-1);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .18s, background .18s;
+    }
+
+    .logo-upload-area:hover {
+      border-color: var(--blue);
+      background: var(--blue-lt);
+    }
+
+    .logo-upload-area input { display: none; }
+
+    .logo-upload-label {
+      font-size: 12px; font-weight: 600;
+      color: var(--grey-4); display: block;
+    }
+
+    .logo-upload-sub {
+      font-size: 11px; color: var(--grey-2);
+      margin-top: 3px; display: block;
+    }
+
+    #logo-preview-editor {
+      width: 60px; height: 60px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin: 0 auto 8px;
+      display: none;
+    }
+
+    /* Couleur pickers */
+    .color-row {
+      display: flex; gap: 10px;
+    }
+
+    .color-item {
+      display: flex; align-items: center; gap: 8px;
+      flex: 1;
+    }
+
+    .color-item label {
+      font-size: 11px; font-weight: 600;
+      color: var(--grey-4); white-space: nowrap;
+    }
+
+    .color-item input[type="color"] {
+      width: 36px; height: 36px;
+      border: 2px solid var(--grey-1);
+      border-radius: 8px; cursor: pointer;
+      padding: 2px; background: none;
+    }
+
+    /* Save button */
+    .editor-save {
+      width: 100%; padding: 14px;
+      background: var(--blue); color: var(--white);
+      border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 700; font-family: inherit;
+      cursor: pointer; margin-top: 6px;
+      transition: background .18s;
+    }
+
+    .editor-save:hover { background: var(--blue-dk); }
+
+    .editor-reset {
+      width: 100%; padding: 10px;
+      background: none; color: var(--grey-4);
+      border: 1.5px solid var(--grey-1); border-radius: 10px;
+      font-size: 13px; font-weight: 600; font-family: inherit;
+      cursor: pointer; margin-top: 8px;
+      transition: border-color .18s;
+    }
+
+    .editor-reset:hover { border-color: var(--red); color: var(--red); }
+
+    /* Overlay */
+    #editor-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 590;
+      display: none;
+    }
+
+    #editor-overlay.open { display: block; }
+
+    @media (max-width: 360px) {
+      .chips-grid { grid-template-columns: 1fr; }
+      .btn-row    { grid-template-columns: 1fr; }
+    }
+
+    /* ── PORTFOLIO ── */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .portfolio-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      background: var(--grey-1);
+      cursor: pointer;
+    }
+
+    .portfolio-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .2s;
+    }
+
+    .portfolio-item:active img { transform: scale(.97); }
+
+    .portfolio-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,.65));
+      color: #fff;
+      font-size: 11px; font-weight: 600;
+      padding: 18px 8px 7px;
+    }
+
+    .portfolio-empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 28px;
+      color: var(--grey-2);
+      font-size: 13px;
+    }
+
+    /* Lightbox */
+    #lightbox {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.92);
+      z-index: 9000;
+      align-items: center; justify-content: center;
+      flex-direction: column;
+    }
+
+    #lightbox.open { display: flex; }
+
+    #lightbox img {
+      max-width: 95vw; max-height: 80vh;
+      border-radius: 10px;
+      object-fit: contain;
+    }
+
+    #lightbox-caption {
+      color: #fff; font-size: 13px; font-weight: 600;
+      margin-top: 12px; text-align: center;
+    }
+
+    #lightbox-close {
+      position: absolute; top: 16px; right: 18px;
+      background: rgba(255,255,255,.15); border: none;
+      color: #fff; border-radius: 50%;
+      width: 34px; height: 34px; font-size: 18px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Portfolio dans l'éditeur */
+    .ed-portfolio-tabs {
+      display: flex; gap: 6px; margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .ed-ptab {
+      padding: 6px 14px;
+      border: 1.5px solid var(--grey-1);
+      border-radius: 20px;
+      background: none; font-size: 12px; font-weight: 700;
+      cursor: pointer; font-family: inherit; color: var(--grey-4);
+      transition: border-color .15s, color .15s;
+    }
+
+    .ed-ptab.active { border-color: var(--blue); color: var(--blue); }
+
+    .ed-portfolio-panel { display: none; }
+    .ed-portfolio-panel.active { display: block; }
+
+    .ed-porto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .ed-porto-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      background: var(--grey-1);
+    }
+
+    .ed-porto-item img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+
+    .ed-porto-del {
+      position: absolute; top: 4px; right: 4px;
+      background: rgba(0,0,0,.55); color: #fff;
+      border: none; border-radius: 50%;
+      width: 24px; height: 24px; font-size: 13px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+
+    .ed-porto-caption-input {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,.55);
+      border: none; color: #fff;
+      font-size: 10px; font-weight: 600;
+      padding: 4px 6px; width: 100%;
+      font-family: inherit;
+    }
+
+    .ed-porto-caption-input::placeholder { color: rgba(255,255,255,.55); }
+
+    .ed-add-photo {
+      width: 100%; padding: 11px;
+      border: 2px dashed var(--grey-1);
+      border-radius: 8px;
+      background: none; color: var(--grey-4);
+      font-size: 13px; font-weight: 600; font-family: inherit;
+      cursor: pointer; text-align: center;
+      transition: border-color .15s;
+    }
+
+    .ed-add-photo:hover { border-color: var(--blue); color: var(--blue); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<div id="app-header">
+  <div class="header-top">
+    <div id="logo-zone">
+      <img id="logo-img" src="" alt="Logo" style="display:none"/>
+      <div id="logo-placeholder">LOGO</div>
+    </div>
+    <div class="header-text">
+      <div id="header-agency-name">Sinartic Agency</div>
+      <div id="header-tagline">Demande de devis &middot; Version bêta</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active"  onclick="switchTab('clinique')">Clinique Info.</button>
+    <button class="tab-btn"         onclick="switchTab('studio')">Studio Créatif</button>
+    <button class="tab-btn"         onclick="switchTab('training')">Formation</button>
+    <button class="tab-btn"         onclick="switchTab('infos')">Infos</button>
+  </div>
+</div>
+
+<main>
+
+  <!-- ══════════════════ CLINIQUE INFORMATIQUE ══════════════════ -->
+  <div id="panel-clinique" class="branch-panel active">
+
+    <div class="hero-card">
+      <div class="branch-label">Clinique Informatique</div>
+      <h2>Diagnostic, réparation et maintenance</h2>
+      <p>Ton appareil est pris en charge par nos techniciens. Dépannage, optimisation, installation — nous traitons chaque cas avec précision.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Motif de la demande</div>
+      <div class="chips-grid" id="chips-clinique">
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Diagnostic général"/>
+          <span class="chip-name">Diagnostic général</span>
+          <span class="chip-sub">À partir de 3 000 F</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Écran noir / démarrage"/>
+          <span class="chip-name">Écran noir / démarrage</span>
+          <span class="chip-sub">Sur devis</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Virus / lenteur"/>
+          <span class="chip-name">Virus / Lenteur</span>
+          <span class="chip-sub">À partir de 5 000 F</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Installation logiciels"/>
+          <span class="chip-name">Installation logiciels</span>
+          <span class="chip-sub">À partir de 2 000 F</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Récupération de données"/>
+          <span class="chip-name">Récupération données</span>
+          <span class="chip-sub">Sur devis</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Maintenance préventive"/>
+          <span class="chip-name">Maintenance préventive</span>
+          <span class="chip-sub">À partir de 5 000 F</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Tes informations</div>
+      <div class="field">
+        <span class="field-label">Nom complet</span>
+        <input type="text" id="clinique-nom" placeholder="Ton nom"/>
+      </div>
+      <div class="field">
+        <span class="field-label">WhatsApp / Téléphone</span>
+        <input type="tel" id="clinique-tel" placeholder="+237 6XX XXX XXX"/>
+      </div>
+      <div class="field">
+        <span class="field-label">Type d'appareil</span>
+        <select id="clinique-appareil">
+          <option value="">Sélectionne</option>
+          <option>Ordinateur portable</option>
+          <option>Ordinateur de bureau</option>
+          <option>Imprimante</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-label">Décris le problème</span>
+        <textarea id="clinique-desc" placeholder="Depuis quand ? Que s'est-il passé avant la panne ?"></textarea>
+      </div>
+      <div class="field">
+        <span class="field-label">Délai souhaité</span>
+        <div class="delai-row">
+          <button class="delai-btn" onclick="selectDelai(this)">Urgent<small>Moins de 24h</small></button>
+          <button class="delai-btn" onclick="selectDelai(this)">Normal<small>2 à 5 jours</small></button>
+          <button class="delai-btn" onclick="selectDelai(this)">Flexible<small>Pas de rush</small></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="porto-card-clinique" style="display:none">
+      <div class="card-label">Nos réalisations — Clinique</div>
+      <div class="portfolio-grid" id="porto-grid-clinique">
+        <div class="portfolio-empty">Aucune réalisation pour l'instant.</div>
+      </div>
+    </div>
+
+    <div class="btn-row" style="grid-template-columns:1fr">
+      <button class="btn btn-wa" onclick="sendWA('clinique')">📲 Envoyer sur WhatsApp</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STUDIO CREATIF ══════════════════ -->
+  <div id="panel-studio" class="branch-panel">
+
+    <div class="hero-card red">
+      <div class="branch-label">Studio Créatif</div>
+      <h2>Design, identité visuelle et impression</h2>
+      <p>Du logo à la bâche, du montage à la carte de visite — conception et impression sur tous supports.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Prestations</div>
+      <div class="chips-grid" id="chips-studio">
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Logo / Identité visuelle"/>
+          <span class="chip-name">Logo / Identité visuelle</span>
+          <span class="chip-sub">À partir de 15 000 F</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Flyer / Affiche"/>
+          <span class="chip-name">Flyer / Affiche</span>
+          <span class="chip-sub">À partir de 5 000 F</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Montage photo / vidéo"/>
+          <span class="chip-name">Montage photo / vidéo</span>
+          <span class="chip-sub">Sur devis</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Impression cartes de visite"/>
+          <span class="chip-name">Cartes de visite</span>
+          <span class="chip-sub">100 unités min.</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Impression bâche / affiche"/>
+          <span class="chip-name">Bâche / Affiche imprimée</span>
+          <span class="chip-sub">Sur mesure</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Agrandissement photo"/>
+          <span class="chip-name">Agrandissement photo</span>
+          <span class="chip-sub">Tout format</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Roll-up / Kakémono"/>
+          <span class="chip-name">Roll-up / Kakémono</span>
+          <span class="chip-sub">Avec ou sans pied</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Pack réseaux sociaux"/>
+          <span class="chip-name">Pack réseaux sociaux</span>
+          <span class="chip-sub">À partir de 10 000 F</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Tes informations</div>
+      <div class="field">
+        <span class="field-label">Nom complet</span>
+        <input type="text" id="studio-nom" placeholder="Ton nom"/>
+      </div>
+      <div class="field">
+        <span class="field-label">WhatsApp / Téléphone</span>
+        <input type="tel" id="studio-tel" placeholder="+237 6XX XXX XXX"/>
+      </div>
+      <div class="field">
+        <span class="field-label">As-tu un fichier source ?</span>
+        <select id="studio-fichier">
+          <option value="">Sélectionne</option>
+          <option>Oui, je l'enverrai sur WhatsApp</option>
+          <option>Non, j'ai besoin d'une création complète</option>
+          <option>Je ne sais pas encore</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-label">Décris ton projet</span>
+        <textarea id="studio-desc" placeholder="Couleurs, style, deadline, quantité à imprimer..."></textarea>
+      </div>
+      <div class="field">
+        <span class="field-label">Délai souhaité</span>
+        <div class="delai-row">
+          <button class="delai-btn" onclick="selectDelai(this)">Urgent<small>Moins de 48h</small></button>
+          <button class="delai-btn" onclick="selectDelai(this)">Normal<small>1 à 2 semaines</small></button>
+          <button class="delai-btn" onclick="selectDelai(this)">Flexible<small>Pas de rush</small></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="porto-card-studio" style="display:none">
+      <div class="card-label">Nos réalisations — Studio</div>
+      <div class="portfolio-grid" id="porto-grid-studio">
+        <div class="portfolio-empty">Aucune réalisation pour l'instant.</div>
+      </div>
+    </div>
+
+    <div class="btn-row" style="grid-template-columns:1fr">
+      <button class="btn btn-wa" onclick="sendWA('studio')">📲 Envoyer sur WhatsApp</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ FORMATION ══════════════════ -->
+  <div id="panel-training" class="branch-panel">
+
+    <div class="hero-card dark">
+      <div class="branch-label">Sinartic Training</div>
+      <h2>Formations pratiques et professionnelles</h2>
+      <p>Word, Excel, PowerPoint, design graphique, IA — des formations concrètes pour progresser rapidement.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Formation souhaitée</div>
+      <div class="chips-grid" id="chips-training">
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Microsoft Word"/>
+          <span class="chip-name">Microsoft Word</span>
+          <span class="chip-sub">Débutant à expert</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Microsoft Excel"/>
+          <span class="chip-name">Microsoft Excel</span>
+          <span class="chip-sub">Tableaux et formules</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Microsoft PowerPoint"/>
+          <span class="chip-name">PowerPoint</span>
+          <span class="chip-sub">Présentations pro</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Design graphique"/>
+          <span class="chip-name">Design graphique</span>
+          <span class="chip-sub">Canva / Illustrator</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Intelligence artificielle"/>
+          <span class="chip-name">Intelligence artificielle</span>
+          <span class="chip-sub">ChatGPT, Claude...</span>
+        </label>
+        <label class="chip" onclick="toggleChip(this)">
+          <input type="checkbox" value="Maintenance informatique"/>
+          <span class="chip-name">Maintenance PC</span>
+          <span class="chip-sub">Dépannage et entretien</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Tes informations</div>
+      <div class="field">
+        <span class="field-label">Nom complet</span>
+        <input type="text" id="training-nom" placeholder="Ton nom"/>
+      </div>
+      <div class="field">
+        <span class="field-label">WhatsApp / Téléphone</span>
+        <input type="tel" id="training-tel" placeholder="+237 6XX XXX XXX"/>
+      </div>
+      <div class="field">
+        <span class="field-label">Ton niveau actuel</span>
+        <select id="training-niveau">
+          <option value="">Sélectionne</option>
+          <option>Débutant — jamais pratiqué</option>
+          <option>Intermédiaire — bases acquises</option>
+          <option>Avancé — perfectionnement</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-label">Format préféré</span>
+        <select id="training-format">
+          <option value="">Sélectionne</option>
+          <option>Présentiel à Yaoundé</option>
+          <option>En ligne (Zoom / WhatsApp)</option>
+          <option>Les deux me conviennent</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-label">Message ou objectif</span>
+        <textarea id="training-desc" placeholder="Ton objectif, tes disponibilités, nombre de participants..."></textarea>
+      </div>
+    </div>
+
+    <div class="card" id="porto-card-training" style="display:none">
+      <div class="card-label">Nos réalisations — Formation</div>
+      <div class="portfolio-grid" id="porto-grid-training">
+        <div class="portfolio-empty">Aucune réalisation pour l'instant.</div>
+      </div>
+    </div>
+
+    <div class="btn-row" style="grid-template-columns:1fr">
+      <button class="btn btn-wa" onclick="sendWA('training')">📲 Envoyer sur WhatsApp</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ INFOS ══════════════════ -->
+  <div id="panel-infos" class="branch-panel">
+
+    <div class="hero-card">
+      <div class="branch-label">Sinartic Agency</div>
+      <h2 id="info-agency-name">Sinartic Agency</h2>
+      <p id="info-tagline">Agence créative multidisciplinaire basée à Yaoundé, Cameroun.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Contact</div>
+      <div class="info-item">
+        <strong>Localisation</strong>
+        <span id="info-location">Yaoundé, Cameroun</span>
+      </div>
+      <div class="info-item">
+        <strong>WhatsApp</strong>
+        <span id="info-wa">—</span>
+      </div>
+      <div class="info-item">
+        <strong>E-mail</strong>
+        <span id="info-email">—</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Process et conditions</div>
+      <div class="info-item">
+        <strong>Réponse aux devis</strong>
+        <span>Sous 24 heures ouvrables après réception de ta demande.</span>
+      </div>
+      <div class="info-item">
+        <strong>Acompte</strong>
+        <span>50 % à la commande, solde à la livraison.</span>
+      </div>
+      <div class="info-item">
+        <strong>Révisions</strong>
+        <span>2 révisions incluses dans chaque prestation design.</span>
+      </div>
+      <div class="info-item">
+        <strong>Paiement accepté</strong>
+        <span>Orange Money, MTN MoMo, espèces.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Version bêta</div>
+      <div class="info-item">
+        <strong>Application en cours de développement</strong>
+        <span>Cette version bêta est fonctionnelle. Merci de nous signaler tout bug ou suggestion via WhatsApp.</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast">Ouverture en cours…</div>
+
+<!-- ═══ LIGHTBOX ═══ -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+  <div id="lightbox-caption"></div>
+</div>
+
+<!-- ═══ BOUTON EDITEUR ═══ -->
+<button id="editor-toggle" onclick="openEditor()">Modifier l'app</button>
+
+<!-- ═══ OVERLAY ═══ -->
+<div id="editor-overlay" onclick="closeEditor()"></div>
+
+<!-- ═══ PANNEAU EDITEUR ═══ -->
+<div id="editor-panel">
+  <div class="editor-handle"></div>
+  <div class="editor-header">
+    <h3>Editeur visuel</h3>
+    <button class="editor-close" onclick="closeEditor()">&#x2715;</button>
+  </div>
+  <div class="editor-body">
+
+    <!-- LOGO -->
+    <div class="editor-section">
+      <div class="editor-section-title">Logo</div>
+      <div class="logo-upload-area" onclick="document.getElementById('logo-input').click()">
+        <img id="logo-preview-editor" src="" alt=""/>
+        <input type="file" id="logo-input" accept="image/*" onchange="uploadLogo(event)"/>
+        <span class="logo-upload-label">Importer ton logo</span>
+        <span class="logo-upload-sub">PNG, JPG, SVG — fond transparent recommandé</span>
+      </div>
+    </div>
+
+    <!-- IDENTITE -->
+    <div class="editor-section">
+      <div class="editor-section-title">Identité</div>
+      <div class="editor-field">
+        <label>Nom de l'agence</label>
+        <input type="text" id="ed-name" placeholder="Sinartic Agency"/>
+      </div>
+      <div class="editor-field">
+        <label>Slogan / sous-titre</label>
+        <input type="text" id="ed-tagline" placeholder="Demande de devis · Version bêta"/>
+      </div>
+      <div class="editor-field">
+        <label>Description (page Infos)</label>
+        <input type="text" id="ed-desc" placeholder="Agence créative basée à Yaoundé..."/>
+      </div>
+      <div class="editor-field">
+        <label>Localisation</label>
+        <input type="text" id="ed-location" placeholder="Yaoundé, Cameroun"/>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="editor-section">
+      <div class="editor-section-title">Contact</div>
+      <div class="editor-field">
+        <label>Numéro WhatsApp (sans + ni espaces)</label>
+        <input type="tel" id="ed-wa" placeholder="237600000000"/>
+      </div>
+      <div class="editor-field">
+        <label>Adresse e-mail</label>
+        <input type="email" id="ed-email" placeholder="contact@sinarticagency.com"/>
+      </div>
+    </div>
+
+    <!-- COULEURS -->
+    <div class="editor-section">
+      <div class="editor-section-title">Couleurs</div>
+      <div class="color-row">
+        <div class="color-item">
+          <input type="color" id="ed-color-primary" value="#0073DA" oninput="previewColors()"/>
+          <label>Principale</label>
+        </div>
+        <div class="color-item">
+          <input type="color" id="ed-color-accent" value="#E8201A" oninput="previewColors()"/>
+          <label>Accent</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- PORTFOLIO -->
+    <div class="editor-section">
+      <div class="editor-section-title">Portfolio</div>
+      <div class="ed-portfolio-tabs">
+        <button class="ed-ptab active" onclick="switchPortoTab('clinique', this)">Clinique</button>
+        <button class="ed-ptab"        onclick="switchPortoTab('studio', this)">Studio</button>
+        <button class="ed-ptab"        onclick="switchPortoTab('training', this)">Formation</button>
+      </div>
+      <div id="ed-porto-clinique" class="ed-portfolio-panel active">
+        <div class="ed-porto-grid" id="ed-grid-clinique"></div>
+        <button class="ed-add-photo" onclick="triggerPortoUpload('clinique')">+ Ajouter une photo</button>
+        <input type="file" id="porto-input-clinique" accept="image/*" multiple style="display:none" onchange="addPortoPhotos('clinique', event)"/>
+      </div>
+      <div id="ed-porto-studio" class="ed-portfolio-panel">
+        <div class="ed-porto-grid" id="ed-grid-studio"></div>
+        <button class="ed-add-photo" onclick="triggerPortoUpload('studio')">+ Ajouter une photo</button>
+        <input type="file" id="porto-input-studio" accept="image/*" multiple style="display:none" onchange="addPortoPhotos('studio', event)"/>
+      </div>
+      <div id="ed-porto-training" class="ed-portfolio-panel">
+        <div class="ed-porto-grid" id="ed-grid-training"></div>
+        <button class="ed-add-photo" onclick="triggerPortoUpload('training')">+ Ajouter une photo</button>
+        <input type="file" id="porto-input-training" accept="image/*" multiple style="display:none" onchange="addPortoPhotos('training', event)"/>
+      </div>
+    </div>
+
+    <button class="editor-save" onclick="saveEditor()">Enregistrer les modifications</button>
+    <button class="editor-reset" onclick="resetEditor()">Réinitialiser</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   CONFIG — modifiée par l'éditeur
+═══════════════════════════════════════ */
+let CFG = {
+  name:     'Sinartic Agency',
+  tagline:  'Demande de devis \u00b7 Version b\u00eata',
+  desc:     'Agence cr\u00e9ative multidisciplinaire bas\u00e9e \u00e0 Yaound\u00e9, Cameroun.',
+  location: 'Yaound\u00e9, Cameroun',
+  wa:       '237693738698',
+  email:    'sinarticagency@gmail.com',
+  primary:  '#0073DA',
+  accent:   '#E8201A',
+  logo:     ''
+};
+
+/* ── Charger config sauvegardée ── */
+(function(){
+  try {
+    const saved = localStorage.getItem('sinartic_cfg');
+    if (saved) CFG = Object.assign(CFG, JSON.parse(saved));
+  } catch(e){}
+  applyConfig();
+})();
+
+function applyConfig() {
+  document.getElementById('header-agency-name').textContent = CFG.name;
+  document.getElementById('header-tagline').textContent     = CFG.tagline;
+  document.getElementById('info-agency-name').textContent   = CFG.name;
+  document.getElementById('info-tagline').textContent       = CFG.desc;
+  document.getElementById('info-location').textContent      = CFG.location;
+  document.getElementById('info-wa').textContent            = CFG.wa ? '+' + CFG.wa : '\u2014';
+  document.getElementById('info-email').textContent         = CFG.email || '\u2014';
+  document.title = CFG.name;
+
+  // Logo
+  if (CFG.logo) {
+    document.getElementById('logo-img').src          = CFG.logo;
+    document.getElementById('logo-img').style.display = 'block';
+    document.getElementById('logo-placeholder').style.display = 'none';
+  } else {
+    document.getElementById('logo-img').style.display = 'none';
+    document.getElementById('logo-placeholder').style.display = 'block';
+  }
+
+  // Couleurs
+  document.documentElement.style.setProperty('--blue', CFG.primary);
+  document.documentElement.style.setProperty('--blue-dk', shadeColor(CFG.primary, -20));
+  document.documentElement.style.setProperty('--blue-lt', hexToRgba(CFG.primary, .1));
+  document.documentElement.style.setProperty('--red',  CFG.accent);
+}
+
+function shadeColor(hex, pct) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, Math.max(0, (n >> 16) + pct));
+  const g = Math.min(255, Math.max(0, ((n >> 8) & 0xff) + pct));
+  const b = Math.min(255, Math.max(0, (n & 0xff) + pct));
+  return '#' + [r, g, b].map(v => v.toString(16).padStart(2,'0')).join('');
+}
+
+function hexToRgba(hex, alpha) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n>>16},${(n>>8)&255},${n&255},${alpha})`;
+}
+
+/* ── TABS ── */
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.branch-panel').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+/* ── CHIPS ── */
+function toggleChip(el) {
+  el.classList.toggle('selected');
+}
+
+/* ── DELAI ── */
+function selectDelai(btn) {
+  btn.closest('.delai-row').querySelectorAll('.delai-btn')
+    .forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+/* ── BUILD MESSAGE ── */
+function buildMsg(branch) {
+  const nomEl  = document.getElementById(branch + '-nom');
+  const telEl  = document.getElementById(branch + '-tel');
+  const descEl = document.getElementById(branch + '-desc');
+
+  const nom  = nomEl?.value.trim()  || '(non renseigné)';
+  const tel  = telEl?.value.trim()  || '(non renseigné)';
+  const desc = descEl?.value.trim() || '';
+
+  const container = {
+    clinique: 'chips-clinique', studio: 'chips-studio', training: 'chips-training'
+  }[branch];
+
+  const services = [...document.querySelectorAll('#' + container + ' .chip.selected input')]
+    .map(c => c.value);
+
+  const branchLabel = {
+    clinique: 'Clinique Informatique',
+    studio:   'Studio Créatif',
+    training: 'Formation'
+  }[branch];
+
+  let msg = `Nouvelle demande - ${branchLabel}\n\n`;
+  msg += `Nom : ${nom}\n`;
+  msg += `Téléphone : ${tel}\n`;
+
+  if (services.length)
+    msg += `\nPrestations souhaitées :\n${services.map(s => '- ' + s).join('\n')}\n`;
+
+  // Extras
+  if (branch === 'clinique') {
+    const ap = document.getElementById('clinique-appareil')?.value;
+    if (ap) msg += `\nAppareil : ${ap}`;
+  }
+  if (branch === 'studio') {
+    const fi = document.getElementById('studio-fichier')?.value;
+    if (fi) msg += `\nFichier source : ${fi}`;
+  }
+  if (branch === 'training') {
+    const nv = document.getElementById('training-niveau')?.value;
+    const fm = document.getElementById('training-format')?.value;
+    if (nv) msg += `\nNiveau : ${nv}`;
+    if (fm) msg += `\nFormat : ${fm}`;
+  }
+
+  const delai = document.querySelector(`#panel-${branch} .delai-btn.selected`);
+  if (delai) msg += `\nDélai : ${delai.childNodes[0].textContent.trim()}`;
+
+  if (desc) msg += `\n\nMessage :\n${desc}`;
+  msg += `\n\n(Envoyé depuis l'app Sinartic Agency)`;
+  return msg;
+}
+
+/* ── VALIDATION ── */
+function validate(branch) {
+  const nom = document.getElementById(branch + '-nom')?.value.trim();
+  const tel = document.getElementById(branch + '-tel')?.value.trim();
+  if (!nom || !tel) {
+    showToast('Remplis ton nom et ton numéro avant d\'envoyer.');
+    return false;
+  }
+  return true;
+}
+
+/* ── SEND ── */
+function sendWA(branch) {
+  if (!validate(branch)) return;
+  const msg = buildMsg(branch);
+  window.open('https://wa.me/' + CFG.wa + '?text=' + encodeURIComponent(msg), '_blank');
+  showToast('Ouverture de WhatsApp…');
+}
+
+
+
+/* ── TOAST ── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ═══════════════════════════════════════
+   EDITEUR VISUEL
+═══════════════════════════════════════ */
+function openEditor() {
+  // Pré-remplir les champs
+  document.getElementById('ed-name').value     = CFG.name;
+  document.getElementById('ed-tagline').value  = CFG.tagline;
+  document.getElementById('ed-desc').value     = CFG.desc;
+  document.getElementById('ed-location').value = CFG.location;
+  document.getElementById('ed-wa').value       = CFG.wa;
+  document.getElementById('ed-email').value    = CFG.email;
+  document.getElementById('ed-color-primary').value = CFG.primary;
+  document.getElementById('ed-color-accent').value  = CFG.accent;
+
+  if (CFG.logo) {
+    const prev = document.getElementById('logo-preview-editor');
+    prev.src = CFG.logo; prev.style.display = 'block';
+  }
+
+  document.getElementById('editor-panel').classList.add('open');
+  document.getElementById('editor-overlay').classList.add('open');
+}
+
+function closeEditor() {
+  document.getElementById('editor-panel').classList.remove('open');
+  document.getElementById('editor-overlay').classList.remove('open');
+}
+
+function previewColors() {
+  const p = document.getElementById('ed-color-primary').value;
+  const a = document.getElementById('ed-color-accent').value;
+  document.documentElement.style.setProperty('--blue', p);
+  document.documentElement.style.setProperty('--blue-dk', shadeColor(p, -20));
+  document.documentElement.style.setProperty('--blue-lt', hexToRgba(p, .1));
+  document.documentElement.style.setProperty('--red', a);
+}
+
+function uploadLogo(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const src = ev.target.result;
+    CFG.logo = src;
+    const prev = document.getElementById('logo-preview-editor');
+    prev.src = src; prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveEditor() {
+  CFG.name     = document.getElementById('ed-name').value.trim()     || CFG.name;
+  CFG.tagline  = document.getElementById('ed-tagline').value.trim()  || CFG.tagline;
+  CFG.desc     = document.getElementById('ed-desc').value.trim()     || CFG.desc;
+  CFG.location = document.getElementById('ed-location').value.trim() || CFG.location;
+  CFG.wa       = document.getElementById('ed-wa').value.trim()       || CFG.wa;
+  CFG.email    = document.getElementById('ed-email').value.trim()    || CFG.email;
+  CFG.primary  = document.getElementById('ed-color-primary').value;
+  CFG.accent   = document.getElementById('ed-color-accent').value;
+
+  applyConfig();
+
+  try { localStorage.setItem('sinartic_cfg', JSON.stringify(CFG)); } catch(e){}
+
+  closeEditor();
+  showToast('Modifications enregistrées.');
+}
+
+function resetEditor() {
+  if (!confirm('Remettre les paramètres par défaut ?')) return;
+  localStorage.removeItem('sinartic_cfg');
+  localStorage.removeItem('sinartic_porto');
+  location.reload();
+}
+
+/* ═══════════════════════════════════════
+   PORTFOLIO
+═══════════════════════════════════════ */
+
+// Structure : { clinique: [{src, caption}, ...], studio: [...], training: [...] }
+let PORTO = { clinique: [], studio: [], training: [] };
+
+// Charger portfolio sauvegardé
+(function(){
+  try {
+    const saved = localStorage.getItem('sinartic_porto');
+    if (saved) PORTO = Object.assign(PORTO, JSON.parse(saved));
+  } catch(e){}
+  renderAllPorto();
+})();
+
+function savePorto() {
+  try { localStorage.setItem('sinartic_porto', JSON.stringify(PORTO)); } catch(e){}
+}
+
+/* Rendu grille publique */
+function renderPorto(branch) {
+  const grid = document.getElementById('porto-grid-' + branch);
+  const card = document.getElementById('porto-card-' + branch);
+  const items = PORTO[branch];
+
+  if (!grid) return;
+
+  if (!items || items.length === 0) {
+    grid.innerHTML = '<div class="portfolio-empty">Aucune réalisation pour l\'instant.</div>';
+    if (card) card.style.display = 'none';
+    return;
+  }
+
+  card.style.display = 'block';
+  grid.innerHTML = items.map((item, i) => `
+    <div class="portfolio-item" onclick="openLightbox('${branch}', ${i})">
+      <img src="${item.src}" alt="${item.caption || ''}"/>
+      ${item.caption ? `<div class="portfolio-caption">${item.caption}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderAllPorto() {
+  ['clinique','studio','training'].forEach(renderPorto);
+  ['clinique','studio','training'].forEach(renderEditorPorto);
+}
+
+/* Rendu grille éditeur */
+function renderEditorPorto(branch) {
+  const grid = document.getElementById('ed-grid-' + branch);
+  if (!grid) return;
+  const items = PORTO[branch];
+
+  if (!items || items.length === 0) {
+    grid.innerHTML = '';
+    return;
+  }
+
+  grid.innerHTML = items.map((item, i) => `
+    <div class="ed-porto-item">
+      <img src="${item.src}" alt=""/>
+      <button class="ed-porto-del" onclick="deletePorto('${branch}', ${i})">✕</button>
+      <input class="ed-porto-caption-input" type="text" value="${item.caption || ''}"
+        placeholder="Légende..." oninput="updateCaption('${branch}', ${i}, this.value)"/>
+    </div>
+  `).join('');
+}
+
+/* Tabs éditeur portfolio */
+function switchPortoTab(branch, btn) {
+  document.querySelectorAll('.ed-ptab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.ed-portfolio-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ed-porto-' + branch).classList.add('active');
+}
+
+/* Ajouter photos */
+function triggerPortoUpload(branch) {
+  document.getElementById('porto-input-' + branch).click();
+}
+
+function addPortoPhotos(branch, event) {
+  const files = Array.from(event.target.files);
+  if (!files.length) return;
+
+  let loaded = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      PORTO[branch].push({ src: e.target.result, caption: '' });
+      loaded++;
+      if (loaded === files.length) {
+        savePorto();
+        renderPorto(branch);
+        renderEditorPorto(branch);
+        showToast(loaded + ' photo(s) ajoutée(s).');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Reset input pour permettre re-upload du même fichier
+  event.target.value = '';
+}
+
+/* Supprimer une photo */
+function deletePorto(branch, index) {
+  PORTO[branch].splice(index, 1);
+  savePorto();
+  renderPorto(branch);
+  renderEditorPorto(branch);
+}
+
+/* Mettre à jour la légende */
+function updateCaption(branch, index, value) {
+  PORTO[branch][index].caption = value;
+  savePorto();
+  renderPorto(branch);
+}
+
+/* Lightbox */
+function openLightbox(branch, index) {
+  const item = PORTO[branch][index];
+  document.getElementById('lightbox-img').src = item.src;
+  document.getElementById('lightbox-caption').textContent = item.caption || '';
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+</script>
+</body>
+</html>
